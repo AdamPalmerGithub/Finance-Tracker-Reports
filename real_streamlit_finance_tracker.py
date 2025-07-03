@@ -1,7 +1,27 @@
 import streamlit as st
 import pandas as pd 
+import yfinance as yf
 
-st.title('📊 Accounting Ratio Calculator' )
+st.title('📊 Ratio Calculator' )
+
+ticker = st.text_input("🔍 Enter a stock ticker", placeholder="e.g. AAPL")
+
+if ticker:
+    try:
+        stock = yf.Ticker(ticker)
+        balance_sheet = stock.balance_sheet
+        st.subheader("📄 Balance Sheet")
+        st.dataframe(balance_sheet)
+        if balance_sheet.empty:
+             st.error("⚠️ No balance sheet data found for this ticker.")
+        else:
+                st.success("✅ Balance sheet data fetched successfully!")
+    except:
+        st.error("⚠️ Could not fetch data. Check the ticker symbol.")
+
+
+
+
 st.write('Upload your files to get started')
 
 # Upload Files
@@ -37,6 +57,8 @@ with col2:
         st.metric("Profitability Ratio", "—")
         st.metric("Quick Ratio", "—")
         st.metric("Return on Assets", "—")
+
+
 
 
 
