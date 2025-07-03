@@ -30,7 +30,14 @@ def calc_nwc_ratio(net_working_capital, revenue): #calculates net working capita
     nwc_ratio = net_working_capital / revenue
     return nwc_ratio
 
-#profitability ratios
+profitability_ratios = {
+    "gross_profit_margin": "Gross Profit Margin",
+    "operating_profit_margin": "Operating Profit Margin",
+    "net_profit_margin": "Net Profit Margin",
+    "return_on_assets": "Return on Assets",
+    "return_on_equity": "Return on Equity",
+    "return_on_investment_capital": "Return on Investment Capital"
+}
 def calc_gross_profit_margin(gross_profit, revenue):  #calculates gross profit margin
     if revenue == 0:
         return None  # change to value error if going to user
@@ -68,7 +75,14 @@ def calc_return_on_investment_capital(ebit, tax_rate, invested_capital):  #calcu
     return_on_investment_capital = after_tax_ebit / invested_capital
     return return_on_investment_capital
 
-#Efficiency ratios
+efficiency_ratios = {
+    "asset_turnover_ratio": "Asset Turnover Ratio",
+    "inventory_turnover_ratio": "Inventory Turnover Ratio",
+    "receivables_turnover_ratio": "Receivables Turnover Ratio",
+    "days_sales_outstanding": "Days Sales Outstanding",
+    "accounts_payable_turnover_ratio": "Accounts Payable Turnover Ratio"
+}
+
 def calc_asset_turnover_ratio(revenue, total_assets):  #calculates asset turnover ratio
     if total_assets == 0:
         return None  # change to value error if going to user
@@ -102,7 +116,14 @@ def calc_accounts_payable_turnover_ratio(cost_of_goods_sold, average_accounts_pa
     accounts_payable_turnover_ratio = cost_of_goods_sold / average_accounts_payable
     return accounts_payable_turnover_ratio
 
-#leverage_ratios
+leverage_ratios = {
+    "debt_to_equity_ratio": "Debt to Equity Ratio",
+    "debt_ratio": "Debt Ratio",
+    "equity_ratio": "Equity Ratio",
+    "interest_coverage_ratio": "Interest Coverage Ratio",
+    "financial_leverage_ratio": "Financial Leverage Ratio"
+}
+
 def calc_debt_to_equity_ratio(total_liabilities, shareholder_equity):  #calculates debt to equity ratio
     if shareholder_equity == 0:
         return None  # change to value error if going to user
@@ -133,7 +154,15 @@ def calc_financial_leverage_ratio(total_assets, shareholder_equity):  #calculate
     financial_leverage_ratio = total_assets / shareholder_equity
     return financial_leverage_ratio
 
-#Market value ratios
+market_value_ratios = {
+    "earnings_per_share": "Earnings Per Share",
+    "price_to_earnings_ratio": "Price to Earnings Ratio",
+    "price_to_book_ratio": "Price to Book Ratio",
+    "market_capitalization": "Market Capitalization",
+    "dividend_yield": "Dividend Yield",
+    "dividend_payout_ratio": "Dividend Payout Ratio"
+}
+
 def calc_earnings_per_share(net_income, weighted_average_shares_outstanding):  #calculates earnings per share
     if weighted_average_shares_outstanding == 0:
         return None  # change to value error if going to user
