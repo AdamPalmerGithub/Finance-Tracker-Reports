@@ -49,12 +49,6 @@ def calc_net_profit_margin(net_profit, revenue):  #calculates net profit margin
     net_profit_margin = net_profit / revenue
     return net_profit_margin
 
-def calc_net_profit_margin(net_income, revenue):  #calculates net profit margin
-    if revenue == 0:
-        return None  # change to value error if going to user
-    net_profit_margin = net_income / revenue
-    return net_profit_margin
-
 def calc_return_on_assets(net_income, total_assets):  #calculates return on assets
     if total_assets == 0:
         return None  # change to value error if going to user
