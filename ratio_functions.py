@@ -1,3 +1,9 @@
+"""A page with functions to calculate financial ratios and metrics."""
+
+import general_functions as gf
+import yfinance as yf
+
+
 liquidity_ratios = {
     "current_ratio": "Current Ratio",
     "quick_ratio": "Quick Ratio",
@@ -198,4 +204,8 @@ def calc_dividend_payout_ratio(dividend_per_share, earnings_per_share):  #calcul
         return None  # change to value error if going to user
     dividend_payout_ratio = dividend_per_share / earnings_per_share
     return dividend_payout_ratio
+
+def calc_custom():
+    # Placeholder for custom ratio calculation logic
+    return "Custom ratio calculation not implemented yet."
 
