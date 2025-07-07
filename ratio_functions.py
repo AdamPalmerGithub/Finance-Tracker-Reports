@@ -2,7 +2,28 @@
 
 import general_functions as gf
 import yfinance as yf
+import pandas as pd
 
+def get_open(hist):
+    return round(hist['Open'].iloc[0], 2)
+
+def get_close(hist):
+    return round(hist['Close'].iloc[-1], 2)
+
+def get_high(hist):
+    return round(hist['High'].max(), 2)
+
+def get_low(hist):
+    return round(hist['Low'].min(), 2)
+
+def get_volume(hist):
+    return round(hist['Volume'].sum() / 1_000_000, 2)
+
+def get_total_revenue(financials, year):
+    year_cols = [col for col in financials.columns if col.year == year]
+    if 'Total Revenue' in financials.index and year_cols:
+        return round(financials.loc['Total Revenue', year_cols].sum(), 2)
+    return "N/A"
 
 liquidity_ratios = {
     "current_ratio": "Current Ratio",
@@ -11,18 +32,56 @@ liquidity_ratios = {
     "nwc_ratio": "Net Working Capital Ratio"
 }
 
-def calc_current_ratio(current_assets, current_liabilities): #calculates current ratio
-    if current_liabilities == 0:
-        return None  # change to value error if going to user 
-    current_ratio = current_assets / current_liabilities
-    return current_ratio
+def get_current_ratio(balance_sheet, year):
+    try:
+        # Find all columns for the requested year
+        year_cols = [col for col in balance_sheet.columns if pd.to_datetime(col).year == year]
+        if not year_cols:
+            return "N/A1"
+
+        # Use correct labels from balance_sheet.index
+        if "Current Assets" not in balance_sheet.index or "Current Liabilities" not in balance_sheet.index:
+            return "N/A2"
+
+        current_assets = balance_sheet.loc["Current Assets", year_cols].sum()
+        current_liabilities = balance_sheet.loc["Current Liabilities", year_cols].sum()
+
+        if current_liabilities == 0:
+            return "N/A3"
+
+        return round(current_assets / current_liabilities, 2)
+
+    except Exception as e:
+        print(f"[DEBUG] Error in get_current_ratio: {e}")
+        return "N/A4"
 
 
-def calc_quick_ratio(cash_and_cash_equivalents,marketable_securities, receivables, current_liabilities):  #calculates quick ratio
-    if current_liabilities == 0:
-        return None  # change to value error if going to user
-    quick_ratio = (cash_and_cash_equivalents + marketable_securities + receivables) / current_liabilities
-    return quick_ratio
+
+
+def get_quick_ratio(financials, year):
+    try:
+        year_cols = [col for col in financials.columns if col.year == year]
+        if not year_cols:
+            return "N/A"
+
+        current_assets = financials.loc.get("Total Current Assets", None)
+        inventories = financials.loc.get("Inventory", 0)  # Inventory may be missing; default to 0
+        current_liabilities = financials.loc.get("Total Current Liabilities", None)
+
+        if current_assets is not None and current_liabilities is not None:
+            total_assets = current_assets[year_cols].sum()
+            total_inventory = inventories[year_cols].sum() if inventories is not None else 0
+            total_liabilities = current_liabilities[year_cols].sum()
+
+            if total_liabilities == 0:
+                return "N/A"
+
+            quick_ratio = (total_assets - total_inventory) / total_liabilities
+            return round(quick_ratio, 2)
+        else:
+            return "N/A"
+    except Exception:
+        return "N/A"
 
 def calc_cash_ratio(cash_and_cash_equivalents, current_liabilities):  #calculates cash ratio
     if current_liabilities == 0:
@@ -42,6 +101,7 @@ profitability_ratios = {
     "net_profit_margin": "Net Profit Margin",
     "return_on_assets": "Return on Assets",
     "return_on_equity": "Return on Equity",
+    "return on investment": "Return on Investment",
     "return_on_investment_capital": "Return on Investment Capital"
 }
 def calc_gross_profit_margin(gross_profit, revenue):  #calculates gross profit margin
@@ -73,6 +133,12 @@ def return_on_equity(net_income, shareholder_equity):  #calculates return on equ
         return None  # change to value error if going to user
     return_on_equity = net_income / shareholder_equity
     return return_on_equity
+
+def calc_return_on_investment(investment_gain, investment_cost):  #calculates return on investment
+    if investment_cost == 0:
+        return None
+    return_on_investment = (investment_gain - investment_cost) / investment_cost
+    return return_on_investment
 
 def calc_return_on_investment_capital(ebit, tax_rate, invested_capital):  #calculates return on investment capital
     if invested_capital == 0:

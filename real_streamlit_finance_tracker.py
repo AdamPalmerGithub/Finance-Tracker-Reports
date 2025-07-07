@@ -3,18 +3,23 @@ import pandas as pd
 import yfinance as yf
 from general_functions import set_ticker, get_yearly_data
 from ratio_functions import *
+from listed_items import years, sorted_metrics
 
 st.title('📊 Ratio Calculator' )
 
 ticker_input = st.text_input("🔍 Enter a stock ticker", placeholder="e.g. AAPL")
-
-years = [2025, 2024, 2023, 2022, 2021, 2020] # List of years for multiselect
 
 # Multiselect box for selecting multiple years
 selected_years = st.multiselect(
     'Select the years you want to display:',
     options=years,
     default=[2025]
+)
+
+selected_metrics = st.multiselect(
+    'Select the metrics you want to display:',
+    options=sorted_metrics,
+    default = ["Open", "Close"]
 )
 
 ordered_selected_years = [y for y in years if y in selected_years] #sorted selected years
@@ -29,15 +34,23 @@ if ticker_input:
         st.write("Sector:", info.get("sector", "N/A"))
         st.write("Market Cap:", info.get("marketCap", "N/A"))
 
+
+
         if ordered_selected_years:
             st.markdown("### Selected Years:")
             cols = st.columns(len(ordered_selected_years))
             
             for i, year in enumerate(ordered_selected_years):
                 with cols[i]:
-                    yearly_data = get_yearly_data(track, year)
+                    yearly_data = get_yearly_data(track, year, selected_metrics)
+
                     st.markdown(f"**{year}**")
-                    st.write(yearly_data)            
+                    if isinstance(yearly_data, dict):
+                        for metric in selected_metrics:
+                            value = yearly_data.get(metric, "N/A")
+                            st.metric(label=metric, value=value)
+                    else:
+                        st.error(yearly_data)         
 
     except Exception as e:
         st.error(f"Could not retrieve data for '{ticker_input}'. Error: {e}")
