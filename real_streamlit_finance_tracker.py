@@ -57,16 +57,33 @@ if ticker_input:
 
 
 
-#         stock = yf.Ticker(ticker_input)
-#         balance_sheet = stock.balance_sheet
-#         st.subheader("📄 Balance Sheet")
-#         st.dataframe(balance_sheet)
-#         if balance_sheet.empty:
-#              st.error("⚠️ No balance sheet data found for this ticker.")
-#         else:
-#                 st.success("✅ Balance sheet data fetched successfully!")
-#     except:
-#         st.error("⚠️ Could not fetch data. Check the ticker symbol.")
+# Get and display balance sheet
+try:
+    stock = yf.Ticker(ticker_input)
+    balance_sheet = stock.balance_sheet
+
+    st.subheader("📄 Balance Sheet")
+    if balance_sheet.empty:
+        st.error("⚠️ No balance sheet data found for this ticker.")
+    else:
+        st.dataframe(balance_sheet)
+        st.success("✅ Balance sheet data fetched successfully!")
+
+except Exception as e:
+    st.error(f"⚠️ Could not fetch balance sheet data. Error: {e}")
+
+
+ # Get and Display Profit Loss
+
+st.subheader("📄 Profit and Loss Statement")
+pnl = stock.financials
+
+if not pnl.empty:
+    st.dataframe(pnl)
+    st.success("✅ Profit & Loss data fetched successfully!")
+else:
+    st.error("⚠️ No P&L data found for this ticker.")
+
 
 
 
