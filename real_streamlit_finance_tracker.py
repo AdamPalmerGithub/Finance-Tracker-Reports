@@ -74,15 +74,21 @@ except Exception as e:
 
 
  # Get and Display Profit Loss
+if ticker_input:
+    try:
+        stock = yf.Ticker(ticker_input)
+        pnl = stock.financials
 
-st.subheader("📄 Profit and Loss Statement")
-pnl = stock.financials
+        st.subheader("📄 Profit and Loss Statement")
+        if not pnl.empty:
+            st.dataframe(pnl)
+            st.success("✅ Profit & Loss data fetched successfully!")
+        else:
+            st.error("⚠️ No P&L data found for this ticker.")
 
-if not pnl.empty:
-    st.dataframe(pnl)
-    st.success("✅ Profit & Loss data fetched successfully!")
-else:
-    st.error("⚠️ No P&L data found for this ticker.")
+    except Exception as e:
+        st.error(f"⚠️ Could not fetch P&L data. Error: {e}")
+
 
 
 
